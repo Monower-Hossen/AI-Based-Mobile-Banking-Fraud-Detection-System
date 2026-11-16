@@ -1,0 +1,44 @@
+# Core Data Science
+numpy
+pandas
+scipy
+pyarrow
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Machine Learning
+scikit-learn
+xgboost
+lightgbm
+imbalanced-learn
+
+# Explainable AI
+shap
+
+# Backend
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Dashboard
+streamlit
+
+# Configuration
+python-dotenv
+pyyaml
+
+# Testing
+pytest
+httpx
+
+# Utilities
+joblib
+tqdm

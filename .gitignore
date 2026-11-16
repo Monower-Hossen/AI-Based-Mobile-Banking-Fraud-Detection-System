@@ -1,0 +1,26 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environment / secrets
+.env
+.streamlit/secrets.toml
+
+# Local SQLite database and generated vector index
+*.db
+*.db-wal
+*.db-shm
+data/vector_store/
+
+# Streamlit scratch space
+.streamlit_tmp/
+
+# Downloaded HuggingFace model cache (large, re-fetched at runtime).
+# The `models` package source (models/*.py) IS tracked.
+models/models--*/
+models/.locks/
+models/CACHEDIR.TAG

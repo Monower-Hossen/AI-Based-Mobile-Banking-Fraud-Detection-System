@@ -1,0 +1,809 @@
+{
+  "Logistic Regression": {
+    "train_metrics": {
+      "name": "Logistic Regression (train)",
+      "precision": 0.8627287853577371,
+      "recall": 0.9770170730314623,
+      "f1": 0.9163230332565737,
+      "roc_auc": 0.9984988504968456,
+      "pr_auc": 0.9859168228209371,
+      "false_positive_rate": 0.008188290068483881,
+      "tn": 659529,
+      "fp": 5445,
+      "fn": 805,
+      "tp": 34221
+    },
+    "val_threshold": {
+      "best_threshold": 0.9,
+      "best_precision": 0.9337287261474987,
+      "best_recall": 0.9646996136938857,
+      "best_f1": 0.9489615409814585
+    },
+    "val_metrics": {
+      "precision": 0.9337287261474987,
+      "recall": 0.9646996136938857,
+      "f1": 0.9489615409814585,
+      "roc_auc": 0.9985384936158309,
+      "pr_auc": 0.9862398823506221
+    },
+    "test_metrics": {
+      "precision": 0.914372700748446,
+      "recall": 0.9653140484799786,
+      "f1": 0.9391530944625407,
+      "roc_auc": 0.9984652763836023,
+      "pr_auc": 0.9855204543943703,
+      "false_positive_rate": 0.004735745406326956,
+      "tn": 141858,
+      "fp": 675,
+      "fn": 259,
+      "tp": 7208
+    },
+    "best_threshold": 0.9,
+    "feature_importance": null
+  },
+  "Decision Tree": {
+    "train_metrics": {
+      "name": "Decision Tree (train)",
+      "precision": 0.8747188713964424,
+      "recall": 0.9771598241306458,
+      "f1": 0.9231059686598161,
+      "roc_auc": 0.9986462313561864,
+      "pr_auc": 0.9878578962669526,
+      "false_positive_rate": 0.0073717167889270855,
+      "tn": 660072,
+      "fp": 4902,
+      "fn": 800,
+      "tp": 34226
+    },
+    "val_threshold": {
+      "best_threshold": 0.9,
+      "best_precision": 0.9892697881828316,
+      "best_recall": 0.9456507259890768,
+      "best_f1": 0.9669686031464959
+    },
+    "val_metrics": {
+      "precision": 0.9892697881828316,
+      "recall": 0.9456507259890768,
+      "f1": 0.9669686031464959,
+      "roc_auc": 0.9944606174924351,
+      "pr_auc": 0.9811310437027524
+    },
+    "test_metrics": {
+      "precision": 0.9911392405063291,
+      "recall": 0.9437525110486139,
+      "f1": 0.9668656102078617,
+      "roc_auc": 0.9933609950907629,
+      "pr_auc": 0.9789973354174406,
+      "false_positive_rate": 0.00044200290459051587,
+      "tn": 142470,
+      "fp": 63,
+      "fn": 420,
+      "tp": 7047
+    },
+    "best_threshold": 0.9,
+    "feature_importance": [
+      {
+        "feature": "failed_login_attempts",
+        "importance": 0.8862887787403968
+      },
+      {
+        "feature": "amount_bdt",
+        "importance": 0.0393821125961744
+      },
+      {
+        "feature": "device_risk_flag",
+        "importance": 0.026843419972299932
+      },
+      {
+        "feature": "sim_risk_flag",
+        "importance": 0.023818920450787137
+      },
+      {
+        "feature": "location_risk_flag",
+        "importance": 0.020286865779071666
+      },
+      {
+        "feature": "sim_changed",
+        "importance": 0.001114623843113567
+      },
+      {
+        "feature": "new_device",
+        "importance": 0.0007339573354722529
+      },
+      {
+        "feature": "unusual_location",
+        "importance": 0.0005482135636504594
+      },
+      {
+        "feature": "agent_risk_score",
+        "importance": 0.00015586280824887963
+      },
+      {
+        "feature": "unique_receivers_prior_sender",
+        "importance": 0.000134913266580572
+      },
+      {
+        "feature": "sender_amount_mean_prior",
+        "importance": 0.00011887382963199902
+      },
+      {
+        "feature": "sender_time_since_prev_tx",
+        "importance": 0.00010578211207889021
+      },
+      {
+        "feature": "amount_mean_prior_sender",
+        "importance": 9.47455784332502e-05
+      },
+      {
+        "feature": "receiver_risk_score",
+        "importance": 8.775389955309011e-05
+      },
+      {
+        "feature": "sender_risk_score",
+        "importance": 7.916655156630688e-05
+      },
+      {
+        "feature": "sender_amount_deviation_prior",
+        "importance": 7.625221159300775e-05
+      },
+      {
+        "feature": "transactions_before_this",
+        "importance": 4.3297637449890896e-05
+      },
+      {
+        "feature": "merchant_tx_count",
+        "importance": 3.727056338719539e-05
+      },
+      {
+        "feature": "time_since_prev",
+        "importance": 3.101246683456556e-05
+      },
+      {
+        "feature": "hour",
+        "importance": 1.5021727576848366e-05
+      },
+      {
+        "feature": "amount_deviation_prior",
+        "importance": 3.1550343504042123e-06
+      },
+      {
+        "feature": "agent_tx_count",
+        "importance": 3.174169356527825e-11
+      },
+      {
+        "feature": "in_15min_window",
+        "importance": 7.248113406563893e-15
+      },
+      {
+        "feature": "sender_unique_receivers_prior",
+        "importance": 2.229788778368471e-18
+      },
+      {
+        "feature": "is_night_tx",
+        "importance": 9.392414883284756e-19
+      },
+      {
+        "feature": "sender_tx_count_prior",
+        "importance": 0.0
+      },
+      {
+        "feature": "day_of_week",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_night",
+        "importance": 0.0
+      },
+      {
+        "feature": "multi_risk_flag",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_high_value_prior",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_weekend",
+        "importance": 0.0
+      },
+      {
+        "feature": "high_value_tx",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_tx_count_15min",
+        "importance": 0.0
+      },
+      {
+        "feature": "very_high_value_tx",
+        "importance": 0.0
+      },
+      {
+        "feature": "rapid_tx_flag",
+        "importance": 0.0
+      }
+    ]
+  },
+  "Random Forest": {
+    "train_metrics": {
+      "name": "Random Forest (train)",
+      "precision": 0.8713645392960832,
+      "recall": 0.9768457717124421,
+      "f1": 0.9210951381036989,
+      "roc_auc": 0.9985918524384597,
+      "pr_auc": 0.9859998543571695,
+      "false_positive_rate": 0.007595785699892026,
+      "tn": 659923,
+      "fp": 5051,
+      "fn": 811,
+      "tp": 34215
+    },
+    "val_threshold": {
+      "best_threshold": 0.7382022471910112,
+      "best_precision": 0.9803867403314918,
+      "best_recall": 0.9455175169841481,
+      "best_f1": 0.9626364684342578
+    },
+    "val_metrics": {
+      "precision": 0.9803867403314918,
+      "recall": 0.9455175169841481,
+      "f1": 0.9626364684342578,
+      "roc_auc": 0.9983736209109209,
+      "pr_auc": 0.9851918439529246
+    },
+    "test_metrics": {
+      "precision": 0.985746226942426,
+      "recall": 0.9446899691978037,
+      "f1": 0.9647815085823702,
+      "roc_auc": 0.9983967675823713,
+      "pr_auc": 0.9851067221782933,
+      "false_positive_rate": 0.0007156237502894066,
+      "tn": 142431,
+      "fp": 102,
+      "fn": 413,
+      "tp": 7054
+    },
+    "best_threshold": 0.7382022471910112,
+    "feature_importance": [
+      {
+        "feature": "failed_login_attempts",
+        "importance": 0.4164108254385303
+      },
+      {
+        "feature": "amount_bdt",
+        "importance": 0.10462549538217356
+      },
+      {
+        "feature": "new_device",
+        "importance": 0.0671096823630154
+      },
+      {
+        "feature": "device_risk_flag",
+        "importance": 0.06326295746513062
+      },
+      {
+        "feature": "amount_deviation_prior",
+        "importance": 0.05962851612520178
+      },
+      {
+        "feature": "sender_amount_deviation_prior",
+        "importance": 0.057755816827055585
+      },
+      {
+        "feature": "high_value_tx",
+        "importance": 0.04001238686447463
+      },
+      {
+        "feature": "unusual_location",
+        "importance": 0.03724466015619323
+      },
+      {
+        "feature": "sim_changed",
+        "importance": 0.034540276946958375
+      },
+      {
+        "feature": "location_risk_flag",
+        "importance": 0.03210934928843955
+      },
+      {
+        "feature": "very_high_value_tx",
+        "importance": 0.02733285221381303
+      },
+      {
+        "feature": "sender_high_value_prior",
+        "importance": 0.026318540779752663
+      },
+      {
+        "feature": "sim_risk_flag",
+        "importance": 0.025028043746705662
+      },
+      {
+        "feature": "amount_mean_prior_sender",
+        "importance": 0.0029499611543729546
+      },
+      {
+        "feature": "sender_amount_mean_prior",
+        "importance": 0.002587283499220676
+      },
+      {
+        "feature": "agent_tx_count",
+        "importance": 0.0008939042899799432
+      },
+      {
+        "feature": "sender_unique_receivers_prior",
+        "importance": 0.0005496654609025164
+      },
+      {
+        "feature": "sender_tx_count_prior",
+        "importance": 0.0004404116540608305
+      },
+      {
+        "feature": "transactions_before_this",
+        "importance": 0.0003459390821735192
+      },
+      {
+        "feature": "agent_risk_score",
+        "importance": 0.0001492130350598919
+      },
+      {
+        "feature": "merchant_tx_count",
+        "importance": 0.0001403728765194819
+      },
+      {
+        "feature": "receiver_risk_score",
+        "importance": 0.00010724065564167003
+      },
+      {
+        "feature": "time_since_prev",
+        "importance": 0.00010553191433259102
+      },
+      {
+        "feature": "sender_risk_score",
+        "importance": 0.00010398650556762523
+      },
+      {
+        "feature": "sender_time_since_prev_tx",
+        "importance": 0.0001021266668372491
+      },
+      {
+        "feature": "unique_receivers_prior_sender",
+        "importance": 5.54046236281118e-05
+      },
+      {
+        "feature": "hour",
+        "importance": 4.9359678743622314e-05
+      },
+      {
+        "feature": "is_night_tx",
+        "importance": 1.4746282361198736e-05
+      },
+      {
+        "feature": "rapid_tx_flag",
+        "importance": 1.2588292125760758e-05
+      },
+      {
+        "feature": "is_night",
+        "importance": 7.96435532645367e-06
+      },
+      {
+        "feature": "in_15min_window",
+        "importance": 4.896375701599934e-06
+      },
+      {
+        "feature": "day_of_week",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_weekend",
+        "importance": 0.0
+      },
+      {
+        "feature": "multi_risk_flag",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_tx_count_15min",
+        "importance": 0.0
+      }
+    ]
+  },
+  "XGBoost": {
+    "train_metrics": {
+      "name": "XGBoost (train)",
+      "precision": 0.9895431049848494,
+      "recall": 0.9510078227602352,
+      "f1": 0.9698928488236664,
+      "roc_auc": 0.9990366528453348,
+      "pr_auc": 0.9898946562621664,
+      "false_positive_rate": 0.0005293440044272408,
+      "tn": 664622,
+      "fp": 352,
+      "fn": 1716,
+      "tp": 33310
+    },
+    "val_threshold": {
+      "best_threshold": 0.5134831460674157,
+      "best_precision": 0.9883769198837692,
+      "best_recall": 0.9515119222059412,
+      "best_f1": 0.9695941360119451
+    },
+    "val_metrics": {
+      "precision": 0.9883769198837692,
+      "recall": 0.9515119222059412,
+      "f1": 0.9695941360119451,
+      "roc_auc": 0.9985774701483097,
+      "pr_auc": 0.9868370710688692
+    },
+    "test_metrics": {
+      "precision": 0.9899693507940931,
+      "recall": 0.9516539440203562,
+      "f1": 0.9704335950836463,
+      "roc_auc": 0.9984942115298826,
+      "pr_auc": 0.9862476115501573,
+      "false_positive_rate": 0.0005051461766748753,
+      "tn": 142461,
+      "fp": 72,
+      "fn": 361,
+      "tp": 7106
+    },
+    "best_threshold": 0.5134831460674157,
+    "feature_importance": [
+      {
+        "feature": "failed_login_attempts",
+        "importance": 0.48728376626968384
+      },
+      {
+        "feature": "device_risk_flag",
+        "importance": 0.17822837829589844
+      },
+      {
+        "feature": "sender_amount_deviation_prior",
+        "importance": 0.08278452605009079
+      },
+      {
+        "feature": "unusual_location",
+        "importance": 0.06453970819711685
+      },
+      {
+        "feature": "sim_changed",
+        "importance": 0.060443829745054245
+      },
+      {
+        "feature": "sim_risk_flag",
+        "importance": 0.0315738283097744
+      },
+      {
+        "feature": "amount_bdt",
+        "importance": 0.027207452803850174
+      },
+      {
+        "feature": "location_risk_flag",
+        "importance": 0.02549363113939762
+      },
+      {
+        "feature": "new_device",
+        "importance": 0.019475078210234642
+      },
+      {
+        "feature": "very_high_value_tx",
+        "importance": 0.008034761995077133
+      },
+      {
+        "feature": "high_value_tx",
+        "importance": 0.0042082504369318485
+      },
+      {
+        "feature": "sender_amount_mean_prior",
+        "importance": 0.0016625471180304885
+      },
+      {
+        "feature": "amount_deviation_prior",
+        "importance": 0.001301705138757825
+      },
+      {
+        "feature": "in_15min_window",
+        "importance": 0.0010665243025869131
+      },
+      {
+        "feature": "amount_mean_prior_sender",
+        "importance": 0.000775847292970866
+      },
+      {
+        "feature": "sender_tx_count_prior",
+        "importance": 0.0006184833473525941
+      },
+      {
+        "feature": "sender_time_since_prev_tx",
+        "importance": 0.0006071156822144985
+      },
+      {
+        "feature": "hour",
+        "importance": 0.0005818490171805024
+      },
+      {
+        "feature": "transactions_before_this",
+        "importance": 0.0005674492567777634
+      },
+      {
+        "feature": "agent_risk_score",
+        "importance": 0.0005539675476029515
+      },
+      {
+        "feature": "sender_risk_score",
+        "importance": 0.0005437750369310379
+      },
+      {
+        "feature": "agent_tx_count",
+        "importance": 0.0005416223430074751
+      },
+      {
+        "feature": "receiver_risk_score",
+        "importance": 0.0004987827269360423
+      },
+      {
+        "feature": "time_since_prev",
+        "importance": 0.0004928578273393214
+      },
+      {
+        "feature": "merchant_tx_count",
+        "importance": 0.0004712759400717914
+      },
+      {
+        "feature": "unique_receivers_prior_sender",
+        "importance": 0.00044290217920206487
+      },
+      {
+        "feature": "day_of_week",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_unique_receivers_prior",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_night",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_night_tx",
+        "importance": 0.0
+      },
+      {
+        "feature": "is_weekend",
+        "importance": 0.0
+      },
+      {
+        "feature": "multi_risk_flag",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_high_value_prior",
+        "importance": 0.0
+      },
+      {
+        "feature": "sender_tx_count_15min",
+        "importance": 0.0
+      },
+      {
+        "feature": "rapid_tx_flag",
+        "importance": 0.0
+      }
+    ]
+  },
+  "LightGBM": {
+    "train_metrics": {
+      "name": "LightGBM (train)",
+      "precision": 0.8765409995396184,
+      "recall": 0.9784445840232969,
+      "f1": 0.9246937564081809,
+      "roc_auc": 0.9996391658740734,
+      "pr_auc": 0.9945603604679526,
+      "false_positive_rate": 0.007258930424347418,
+      "tn": 660147,
+      "fp": 4827,
+      "fn": 755,
+      "tp": 34271
+    },
+    "val_threshold": {
+      "best_threshold": 0.9,
+      "best_precision": 0.9875639076965593,
+      "best_recall": 0.952044758225656,
+      "best_f1": 0.9694791101465002
+    },
+    "val_metrics": {
+      "precision": 0.9875639076965593,
+      "recall": 0.952044758225656,
+      "f1": 0.9694791101465002,
+      "roc_auc": 0.9985711533941792,
+      "pr_auc": 0.9869018014475275
+    },
+    "test_metrics": {
+      "precision": 0.9901072871673401,
+      "recall": 0.9516539440203562,
+      "f1": 0.9704998634252936,
+      "roc_auc": 0.9985146203659903,
+      "pr_auc": 0.9862239845978653,
+      "false_positive_rate": 0.000498130257554391,
+      "tn": 142462,
+      "fp": 71,
+      "fn": 361,
+      "tp": 7106
+    },
+    "best_threshold": 0.9,
+    "feature_importance": [
+      {
+        "feature": "amount_bdt",
+        "importance": 376
+      },
+      {
+        "feature": "receiver_risk_score",
+        "importance": 278
+      },
+      {
+        "feature": "sender_risk_score",
+        "importance": 247
+      },
+      {
+        "feature": "failed_login_attempts",
+        "importance": 240
+      },
+      {
+        "feature": "sender_time_since_prev_tx",
+        "importance": 233
+      },
+      {
+        "feature": "amount_deviation_prior",
+        "importance": 159
+      },
+      {
+        "feature": "sender_amount_deviation_prior",
+        "importance": 152
+      },
+      {
+        "feature": "agent_risk_score",
+        "importance": 147
+      },
+      {
+        "feature": "sender_amount_mean_prior",
+        "importance": 145
+      },
+      {
+        "feature": "amount_mean_prior_sender",
+        "importance": 143
+      },
+      {
+        "feature": "unique_receivers_prior_sender",
+        "importance": 136
+      },
+      {
+        "feature": "new_device",
+        "importance": 113
+      },
+      {
+        "feature": "sim_changed",
+        "importance": 97
+      },
+      {
+        "feature": "transactions_before_this",
+        "importance": 95
+      },
+      {
+        "feature": "unusual_location",
+        "importance": 87
+      },
+      {
+        "feature": "hour",
+        "importance": 79
+      },
+      {
+        "feature": "agent_tx_count",
+        "importance": 67
+      },
+      {
+        "feature": "high_value_tx",
+        "importance": 45
+      },
+      {
+        "feature": "merchant_tx_count",
+        "importance": 38
+      },
+      {
+        "feature": "time_since_prev",
+        "importance": 32
+      },
+      {
+        "feature": "location_risk_flag",
+        "importance": 27
+      },
+      {
+        "feature": "sim_risk_flag",
+        "importance": 22
+      },
+      {
+        "feature": "device_risk_flag",
+        "importance": 15
+      },
+      {
+        "feature": "very_high_value_tx",
+        "importance": 9
+      },
+      {
+        "feature": "sender_tx_count_prior",
+        "importance": 9
+      },
+      {
+        "feature": "is_night",
+        "importance": 4
+      },
+      {
+        "feature": "sender_unique_receivers_prior",
+        "importance": 2
+      },
+      {
+        "feature": "sender_high_value_prior",
+        "importance": 2
+      },
+      {
+        "feature": "in_15min_window",
+        "importance": 1
+      },
+      {
+        "feature": "day_of_week",
+        "importance": 0
+      },
+      {
+        "feature": "is_night_tx",
+        "importance": 0
+      },
+      {
+        "feature": "multi_risk_flag",
+        "importance": 0
+      },
+      {
+        "feature": "is_weekend",
+        "importance": 0
+      },
+      {
+        "feature": "sender_tx_count_15min",
+        "importance": 0
+      },
+      {
+        "feature": "rapid_tx_flag",
+        "importance": 0
+      }
+    ]
+  },
+  "Isolation Forest": {
+    "train_metrics": {
+      "precision": 0.8594027202838557,
+      "recall": 0.774343945650726,
+      "f1": 0.814659098871838,
+      "roc_auc": 0.0,
+      "pr_auc": 0.0
+    },
+    "val_threshold": {
+      "best_threshold": -0.07058651812245598
+    },
+    "val_metrics": {
+      "precision": 0.8594027202838557,
+      "recall": 0.774343945650726,
+      "f1": 0.814659098871838,
+      "roc_auc": 0.0,
+      "pr_auc": 0.0
+    },
+    "test_metrics": {
+      "precision": 0.852152485867517,
+      "recall": 0.7873309227266639,
+      "f1": 0.8184602533760267,
+      "roc_auc": 0.0,
+      "pr_auc": 0.0,
+      "false_positive_rate": 0.006674012056732612,
+      "tn": 141542,
+      "fp": 951,
+      "fn": 1694,
+      "tp": 5813
+    },
+    "best_threshold": -0.07058651812245598,
+    "feature_importance": null
+  }
+}
