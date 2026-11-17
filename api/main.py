@@ -148,20 +148,28 @@ def load_artifacts():
     
     logger.info("Loading model artifacts...")
     
-    # Load scaler
-    scaler_path = os.path.join(MODEL_DIR, 'scaler.pkl')
-    if os.path.exists(scaler_path):
+    # Load scaler (may live in models/ or models/preprocessing/)
+    scaler_candidates = [
+        os.path.join(MODEL_DIR, 'scaler.pkl'),
+        os.path.join(MODEL_DIR, 'preprocessing', 'scaler.pkl'),
+    ]
+    scaler_path = next((p for p in scaler_candidates if os.path.exists(p)), None)
+    if scaler_path:
         scaler = joblib.load(scaler_path)
-        logger.info("Scaler loaded successfully")
+        logger.info(f"Scaler loaded from {scaler_path}")
     else:
         logger.warning("Scaler not found, will use manual scaling")
         scaler = None
-    
-    # Load feature info
-    feature_info_path = os.path.join(MODEL_DIR, 'feature_info.pkl')
-    if os.path.exists(feature_info_path):
+
+    # Load feature info (may live in models/ or models/preprocessing/)
+    feature_info_candidates = [
+        os.path.join(MODEL_DIR, 'preprocessing', 'feature_info.pkl'),
+        os.path.join(MODEL_DIR, 'feature_info.pkl'),
+    ]
+    feature_info_path = next((p for p in feature_info_candidates if os.path.exists(p)), None)
+    if feature_info_path:
         feature_info = joblib.load(feature_info_path)
-        logger.info("Feature info loaded successfully")
+        logger.info(f"Feature info loaded from {feature_info_path}")
     else:
         logger.warning("Feature info not found")
         feature_info = None
@@ -195,6 +203,45 @@ load_artifacts()
 
 
 # Helper functions
+
+def build_feature_matrix(data_dict: Dict[str, Any]) -> Optional[pd.DataFrame]:
+    """Build a model-ready feature matrix in the exact column order the scaler/model expect.
+
+    Features present in the request are used as-is; features the model needs but
+    the request does not carry are imputed with the scaler's training mean
+    (which becomes 0 after standardization, i.e. a neutral value).
+    Returns None when the scaler is unavailable.
+    """
+    if scaler is None:
+        return None
+
+    feature_names = getattr(scaler, 'feature_names_in_', None)
+    cols = list(feature_names) if feature_names is not None else []
+    if not cols and feature_info:
+        cols = list(feature_info.get('numeric_cols', []))
+    if not cols:
+        return None
+
+    means = getattr(scaler, 'mean_', None)
+    row: Dict[str, float] = {}
+    for i, col in enumerate(cols):
+        raw = data_dict.get(col, None)
+        try:
+            val = float(raw)
+            if np.isnan(val):
+                raise ValueError
+        except (TypeError, ValueError):
+            val = float(means[i]) if means is not None and i < len(means) else 0.0
+        row[col] = val
+
+    X = pd.DataFrame([row], columns=cols)
+    try:
+        X_scaled = scaler.transform(X)
+        return pd.DataFrame(X_scaled, columns=cols)
+    except Exception as exc:
+        logger.warning(f"Feature scaling failed, using raw features: {exc}")
+        return X
+
 
 def prepare_single_input(data_dict: Dict[str, Any]) -> tuple:
     """Prepare a single transaction for model prediction."""
@@ -312,64 +359,29 @@ async def predict_fraud(request: FraudPredictionRequest):
     try:
         # Prepare input data
         data_dict = request.dict()
-        
-        # Extract target for risk scoring
-        fraud_probability = data_dict.get('fraud_probability', 0.5)
-        
-        # Remove non-feature columns for model prediction
-        feature_data = {k: v for k, v in data_dict.items() 
-                       if k not in ['fraud_probability']}
-        
-        # Convert to DataFrame for preparation
-        df = pd.DataFrame([feature_data])
-        
-        # Prepare features - select numeric columns
-        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        # Remove target-related columns
-        cols_to_remove = ['is_fraud', 'fraud_type', 'transaction_id']
-        numeric_cols = [c for c in numeric_cols if c not in cols_to_remove]
-        X = df[numeric_cols].copy()
-        
-        # Fill NaN
-        for c in numeric_cols:
-            if X[c].isnull().any():
-                X[c] = X[c].fillna(X[c].median())
-        
-        # Scale if scaler available
-        if scaler is not None:
-            try:
-                X = scaler.transform(X[numeric_cols])
-                X = pd.DataFrame(X, columns=numeric_cols, index=[0])
-            except Exception:
-                pass  # Continue without scaling
-        
+
+        # Build a correctly ordered, scaled feature matrix
+        X = build_feature_matrix(data_dict)
+
         # Get fraud probability from model
-        probability = 0.5  # default
-        model_name = "none"
-        
-        if loaded_models:
-            # Use LightGBM as default
-            if 'lightgbm_model.pkl' in loaded_models:
-                try:
-                    prob = loaded_models['lightgbm_model.pkl'].predict_proba(X)[:, 1][0]
-                    probability = float(np.clip(prob, 0, 1))
-                except Exception:
-                    probability = 0.5
-            elif loaded_models:
-                # Try first available model
-                first_model_name = list(loaded_models.keys())[0]
-                try:
-                    prob = loaded_models[first_model_name].predict_proba(X)[:, 1][0]
-                    probability = float(np.clip(prob, 0, 1))
-                except Exception:
-                    probability = 0.5
-        
+        probability = 0.5  # default when the model is unavailable
+        if X is not None and loaded_models:
+            model = loaded_models.get('lightgbm_model.pkl') or next(iter(loaded_models.values()))
+            try:
+                prob = model.predict_proba(X)[:, 1][0]
+                probability = float(np.clip(prob, 0, 1))
+            except Exception as exc:
+                logger.warning(f"Model prediction failed: {exc}")
+                probability = 0.5
+
         # Get risk score and category
         risk_info = get_risk_score(probability)
-        
+
         # Get contributing factors
         contributing_factors = get_contributing_factors(
-            loaded_models.get('lightgbm_model.pkl'), X, list(X.columns)
+            loaded_models.get('lightgbm_model.pkl'),
+            X if X is not None else pd.DataFrame(),
+            list(X.columns) if X is not None else [],
         )
         
         # Format response
@@ -397,54 +409,30 @@ async def batch_predict_fraud(request: BatchPredictionRequest):
         results = []
         
         for tx in request.transactions:
-            # Create dict from request
             data_dict = tx.dict()
-            
-            # Extract fraud probability
-            fraud_probability = data_dict.pop('fraud_probability', 0.5)
-            
-            # Prepare features
-            feature_data = {k: v for k, v in data_dict.items()}
-            df = pd.DataFrame([feature_data])
-            
-            # Get numeric columns
-            numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-            cols_to_remove = ['is_fraud', 'fraud_type', 'transaction_id']
-            numeric_cols = [c for c in numeric_cols if c not in cols_to_remove]
-            
-            if not numeric_cols:
-                probability = 0.5
-            else:
-                X = df[numeric_cols].copy()
-                
-                # Fill NaN
-                for c in numeric_cols:
-                    if X[c].isnull().any():
-                        X[c] = X[c].fillna(X[c].median())
-                
-                # Scale if scaler available
-                if scaler is not None:
-                    try:
-                        X_scaled = scaler.transform(X[numeric_cols])
-                        X = pd.DataFrame(X_scaled, columns=numeric_cols, index=[0])
-                    except Exception:
-                        pass
-                
-                # Get probability from model
-                probability = 0.5
-                if loaded_models and 'lightgbm_model.pkl' in loaded_models:
-                    try:
-                        prob = loaded_models['lightgbm_model.pkl'].predict_proba(X)[:, 1][0]
-                        probability = float(np.clip(prob, 0, 1))
-                    except Exception:
-                        probability = 0.5
-            
+
+            # Build a correctly ordered, scaled feature matrix
+            X = build_feature_matrix(data_dict)
+
+            # Get probability from model
+            probability = 0.5
+            if X is not None and loaded_models:
+                model = loaded_models.get('lightgbm_model.pkl') or next(iter(loaded_models.values()))
+                try:
+                    prob = model.predict_proba(X)[:, 1][0]
+                    probability = float(np.clip(prob, 0, 1))
+                except Exception as exc:
+                    logger.warning(f"Batch model prediction failed: {exc}")
+                    probability = 0.5
+
             # Get risk info
             risk_info = get_risk_score(probability)
-            
+
             # Get contributing factors
             contributing_factors = get_contributing_factors(
-                loaded_models.get('lightgbm_model.pkl'), X, numeric_cols
+                loaded_models.get('lightgbm_model.pkl'),
+                X if X is not None else pd.DataFrame(),
+                list(X.columns) if X is not None else [],
             )
             
             response = FraudPredictionResponse(
@@ -580,8 +568,16 @@ async def get_analytics_overview():
 async def get_model_performance():
     """Get model performance metrics."""
     try:
-        comparison_path = os.path.join(PROJECT_ROOT, 'reports', 'model_results', 'model_comparison.csv')
-        results_path = os.path.join(PROJECT_ROOT, 'reports', 'model_results', 'results.json')
+        comparison_candidates = [
+            os.path.join(PROJECT_ROOT, 'reports', 'model_comparison.csv'),
+            os.path.join(PROJECT_ROOT, 'reports', 'model_results', 'model_comparison.csv'),
+        ]
+        results_candidates = [
+            os.path.join(PROJECT_ROOT, 'reports', 'results.json'),
+            os.path.join(PROJECT_ROOT, 'reports', 'model_results', 'results.json'),
+        ]
+        comparison_path = next((p for p in comparison_candidates if os.path.exists(p)), comparison_candidates[0])
+        results_path = next((p for p in results_candidates if os.path.exists(p)), results_candidates[0])
         
         performance = {
             "best_model": "LightGBM",
