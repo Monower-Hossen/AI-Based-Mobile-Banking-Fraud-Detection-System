@@ -5,6 +5,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.streamlit/
 
 # Environment / secrets
 .env
@@ -24,3 +25,6 @@ data/vector_store/
 models/models--*/
 models/.locks/
 models/CACHEDIR.TAG
+
+data/
+
