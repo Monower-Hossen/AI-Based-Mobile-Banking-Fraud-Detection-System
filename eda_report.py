@@ -8,6 +8,8 @@ import json
 import os
 from datetime import datetime
 
+from src.data.feature_pipeline import repair_temporal_features
+
 sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['font.size'] = 12
@@ -23,6 +25,7 @@ def load_data():
     cust = pd.read_parquet(os.path.join(DATA_DIR, 'customers.parquet'))
     agents = pd.read_parquet(os.path.join(DATA_DIR, 'agents.parquet'))
     merchants = pd.read_parquet(os.path.join(DATA_DIR, 'merchants.parquet'))
+    tx = repair_temporal_features(tx)
     return tx, cust, agents, merchants
 
 
