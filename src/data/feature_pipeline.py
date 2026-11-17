@@ -7,12 +7,32 @@ warnings.filterwarnings('ignore')
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
+def repair_temporal_features(tx: pd.DataFrame) -> pd.DataFrame:
+    """Recompute time-based columns from the authoritative ``timestamp``.
+
+    Some releases of the synthetic dataset ship ``hour``/``day_of_week``/
+    ``is_night`` columns that are not aligned with ``timestamp`` (e.g. a
+    constant day-of-week).  Deriving them from ``timestamp`` keeps the
+    preprocessing, model features and dashboard analytics consistent.
+    """
+    if 'timestamp' not in tx.columns:
+        return tx
+
+    tx = tx.copy()
+    ts = pd.to_datetime(tx['timestamp'])
+    tx['hour'] = ts.dt.hour.astype('int8')
+    tx['day_of_week'] = ts.dt.day_of_week.astype('int8')
+    tx['is_night'] = tx['hour'].isin([22, 23, 0, 1, 2, 3, 4, 5]).astype('int8')
+    return tx
+
+
 def load_data(path: str = 'data/raw') -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Load all parquet data files."""
     tx = pd.read_parquet(f'{path}/transactions.parquet')
     cust = pd.read_parquet(f'{path}/customers.parquet')
     agents = pd.read_parquet(f'{path}/agents.parquet')
     merchants = pd.read_parquet(f'{path}/merchants.parquet')
+    tx = repair_temporal_features(tx)
     return tx, cust, agents, merchants
 
 
@@ -50,17 +70,18 @@ def create_behavioral_features(tx: pd.DataFrame) -> pd.DataFrame:
     All features computed in chronological order (sorted by timestamp).
     Vectorized operations for performance.
     """
-    tx = tx.copy()
+    tx = repair_temporal_features(tx)
     tx = tx.sort_values('timestamp').reset_index(drop=True)
     
     # Cumulative count of prior transactions per sender (0 for first)
     tx['sender_tx_count_prior'] = tx.groupby('sender_id').cumcount()
     
-    # Expanding mean amount per sender before current transaction
-    tx['sender_amount_mean_prior'] = (
-        tx.groupby('sender_id')['amount_bdt']
-        .transform(lambda x: x.expanding().mean().shift(1))
-    )
+    # Expanding mean amount per sender before current transaction.
+    # Vectorized equivalent of expanding().mean().shift(1).
+    sender_amount = tx.groupby('sender_id')['amount_bdt']
+    prior_sum = sender_amount.cumsum() - tx['amount_bdt']
+    prior_count = sender_amount.cumcount()
+    tx['sender_amount_mean_prior'] = prior_sum / prior_count.replace(0, np.nan)
     tx['sender_amount_mean_prior'] = tx['sender_amount_mean_prior'].fillna(tx['amount_bdt'].mean())
     
     # Amount deviation from sender historical mean
@@ -207,6 +228,7 @@ def chronological_split(
     assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-10, \
         "Ratios must sum to 1.0"
     
+    tx = repair_temporal_features(tx)
     tx_sorted = tx.sort_values('timestamp').reset_index(drop=True)
     n = len(tx_sorted)
     n_train = int(n * train_ratio)
