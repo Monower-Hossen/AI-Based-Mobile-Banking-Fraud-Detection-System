@@ -76,4 +76,4 @@ models/CACHEDIR.TAG
 Thumbs.db
 desktop.ini
 
-.streamlit/
+.streamlit
