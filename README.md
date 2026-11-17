@@ -1,4 +1,4 @@
-# AI-Based Mobile Banking Fraud Detection System
+# AI-Based Mobile Banking Transaction Fraud Detection System
 
 An end-to-end, AI-powered fraud detection prototype for Bangladesh's mobile financial services (MFS) ecosystem. The project covers the full lifecycle: synthetic data generation, exploratory analysis, feature engineering, training and comparing multiple machine-learning models, SHAP-based explainability and risk scoring, a FastAPI prediction service, and an interactive Streamlit dashboard.
 
